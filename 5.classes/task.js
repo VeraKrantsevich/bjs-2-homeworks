@@ -93,3 +93,49 @@ class Library {
     }
   }
 }
+
+class Student {
+  constructor(name, age, subjectName) {
+    this.name = name;
+    this.marks = {};
+  }
+
+  addMark(mark, subjectName) {
+    if (mark < 2 || mark > 5) {
+      return;
+    } else if (this.marks[subjectName] === undefined) {
+      this.marks[subjectName] = [];
+      this.marks[subjectName].push(mark);
+    } else {
+      this.marks[subjectName].push(mark);     
+    }
+  }
+
+  getAverageBySubject(subjectName) {
+    let sum = 0;
+    if (this.marks[subjectName] === undefined) {
+      return 0;
+    } else {
+      this.marks[subjectName].forEach((mark) => {
+        sum += mark;
+      });
+      return sum / this.marks[subjectName].length;
+    }
+  }
+
+  getAverage() {
+    let sum = 0;
+    let subjects = Object.keys(this.marks);
+    
+    if (subjects.length !== 0) {
+      
+      for (let i = 0; i < subjects.length; i++) {
+          sum += this.getAverageBySubject(subjects[i]);
+      }
+      
+      return sum / subjects.length;
+    } else {
+      return 0;
+    }
+  }
+}

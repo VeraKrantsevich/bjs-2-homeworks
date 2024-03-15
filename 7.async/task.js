@@ -5,11 +5,11 @@ class AlarmClock {
   }
 
   addClock(time, callback) {
-    if (callback === undefined || time === undefined || callback === 0 || time === 0) {
+    if (!callback || !time) {
       throw new Error("Отсутствуют обязательные аргументы");
     }
-    if (this.alarmCollection.find((e) => e.time === time && e.time !== undefined)) {
-      return console.warn("Уже присутствует звонок на это же время");
+    if (this.alarmCollection.find((e) => e.time === time)) {
+      console.warn("Уже присутствует звонок на это же время");
     }
     this.alarmCollection.push({
       callback: callback,
@@ -19,22 +19,19 @@ class AlarmClock {
     }
 
   removeClock(time) {
-    let alarm = this.alarmCollection.filter((e) => e.time === time);
-    if (alarm.length !== 0) {
-      let i = this.alarmCollection.findIndex((e) => e.time === time);
-      if (i !== -1) {
-      return this.alarmCollection.splice(i, 1);
-      }
-    }
+    this.alarmCollection = this.alarmCollection.filter((e) => e.time !== time);
   }
 
   getCurrentFormattedTime() {
     const currentDate = new Date();
-    return `${currentDate.getHours()}:${currentDate.getMinutes()}`;
+    return currentDate.toLocaleTimeString("ru-Ru", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   }
 
   start() {
-    if (this.intervalId !== undefined && this.intervalId !== 0) {
+    if (this.intervalId) {
       return;
     }
 
@@ -49,9 +46,6 @@ class AlarmClock {
   }
 
   stop() {
-    if (this.intervalId === 0) {
-      return;
-    }
     clearInterval(this.intervalId);
     this.intervalId = null;
   }
